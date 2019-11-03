@@ -105,20 +105,36 @@ class suma(baseSignature):
         return signature == digest, signature, digest 
 
 def main():
+    from termcolor import colored
+    import termAux
+    # for colors in windows
+    import colorama
+    colorama.init()
+
     # modulo must be a prime to ensure the probability of colission is low
     # it also should be bigger than the hash to keep the colissions low
     big_prime = 4386756709 # this is a 33 bit prime number
     instance = suma(modulo=big_prime)
     target_str = "anita lava la tina"
-    print("modulo:", instance.modulo)
-    print("keys:", instance.makeKeys())
-    print("target:", target_str)
-    print("CRC:", instance.hashString(target_str))
+    print("modulo:", colored(instance.modulo, 'cyan'))
+    print("keys:", termAux.colorTuple(instance.makeKeys(), ['yellow','green']))
+    print("target:", colored(target_str, 'magenta'))
+    print("CRC:", colored(instance.hashString(target_str), 'cyan'))
     signature = instance.sign(target_str)
-    print("signature:", signature)
-    print("verification:", instance.verify(target_str, signature))
-    print("verification (failed for control):", 
-          instance.verify(target_str + "a", signature))
+    print("signature:", colored(signature, "cyan"))
+
+    verification_colors = [termAux.colorBoolean, "blue", "cyan"]
+
+    print("verification:", 
+          termAux.colorTuple(instance.verify(target_str, signature),
+                             verification_colors
+                            )
+         )
+    print("verification", termAux.colorTuple(("failed for control",), "yellow"), 
+          termAux.colorTuple(instance.verify(target_str + "a", signature),
+                  verification_colors
+                 )
+         )
 
 if __name__ == '__main__':
     main()
