@@ -130,7 +130,9 @@ def main():
                              verification_colors
                             )
          )
-    print("verification", termAux.colorTuple(("failed for control",), "yellow"), 
+    print("verification",
+          termAux.colorTuple(("failed for control",), "yellow"),
+          ":",
           termAux.colorTuple(instance.verify(target_str + "a", signature),
                   verification_colors
                  )
