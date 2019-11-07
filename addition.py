@@ -2,7 +2,7 @@ from baseSignature import baseSignature
 import binascii
 import secrets
 
-class suma(baseSignature):
+class addition(baseSignature):
 
     # properties
 
@@ -114,7 +114,7 @@ def main():
     # modulo must be a prime to ensure the probability of colission is low
     # it also should be bigger than the hash to keep the colissions low
     big_prime = 4386756709 # this is a 33 bit prime number
-    instance = suma(modulo=big_prime)
+    instance = addition(modulo=big_prime)
     target_str = "anita lava la tina"
     print("modulo:", colored(instance.modulo, 'cyan'))
     print("keys:", termAux.colorTuple(instance.makeKeys(), ['yellow','green']))
