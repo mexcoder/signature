@@ -1,22 +1,21 @@
 import os
-import tkinter as tk
-from tkinter import messagebox
+import sys
 import pygubu
-from sympy import randprime
-from addition import addition
-
-from termcolor import colored
 import termAux
-# for colors in windows
-import colorama
+import colorama # for colors in windows
+import tkinter as tk
+from sympy import randprime
+from termcolor import colored
+from tkinter import messagebox
 
+from addition import addition
+from product import product
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 
-
 class MyApplication:
 
-    def __init__(self, signatureGenerator):
+    def __init__(self, signatureGenerator, primeBounds):
         # 1: Create a builder
         self.builder = builder = pygubu.Builder()
 
@@ -35,6 +34,7 @@ class MyApplication:
 
         # extra elements
         self.generator = signatureGenerator
+        self.primeBounds = primeBounds
         self.messageBox = builder.get_object('Text_1')
 
 
@@ -45,7 +45,7 @@ class MyApplication:
         self.mainwindow.mainloop()
 
     def makeModulo(self):
-        _modulo = randprime(2**32,2**40)
+        _modulo = randprime(*self.primeBounds)
         self.modulo = _modulo
         print("modulo:", colored(_modulo, 'cyan'))
 
@@ -156,8 +156,29 @@ class MyApplication:
 
 
 if __name__ == '__main__':
+
     colorama.init()
-    app = MyApplication(addition())
-    app.modulo = 4386756709
-    app.makeKeys()
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "product":
+        signer = product()
+        modulo = 1014265245160156964
+        bounds = 2**60, 2**64
+    else:
+        signer = addition()
+        modulo = 4386756709
+        bounds = 2**32,2**40
+
+    app = MyApplication(signer, bounds)
+    app.modulo = modulo
+
+    ready = False
+    while not ready:
+        try:
+            app.makeKeys()
+        except ValueError as e:
+            print(colored("Exception while trying to generate the keys", "red"))
+            print(colored(str(e),"red"))
+        else:
+            ready = True
+        
     app.run()
