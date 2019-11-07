@@ -127,16 +127,11 @@ def main():
 
     print("verification:", 
           termAux.colorTuple(instance.verify(target_str, signature),
-                             verification_colors
-                            )
-         )
+                             verification_colors))
     print("verification",
-          termAux.colorTuple(("failed for control",), "yellow"),
-          ":",
+          termAux.colorTuple(("failed for control",), "yellow") + ":",
           termAux.colorTuple(instance.verify(target_str + "a", signature),
-                  verification_colors
-                 )
-         )
+                  verification_colors))
 
 if __name__ == '__main__':
     main()
